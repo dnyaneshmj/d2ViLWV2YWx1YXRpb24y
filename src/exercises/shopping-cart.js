@@ -15,9 +15,40 @@
 *
 * */
 const View = {
+
+  getCart:async function(tbodyElem) {  
+
+    try {
+      
+      const [products, cart] = await Promise.all([
+        fetch('http://localhost:4002/products').then(response => response.json()),
+        fetch('http://localhost:4002/cart').then(response => response.json())
+      ]);
+
+      const fragment = document.createDocumentFragment();
+
+      cart.map( cartProduct => { 
+        let product = products.find(product => product.id === cartProduct.id);
+        let tr = document.createElement("tr");
+        let td = document.createElement("td");
+        let td2 = document.createElement("td");
+        td.innerText= product.id;    
+        td2.innerText= product.name;    
+        tr.append(td)
+        tr.append(td2)
+        fragment.appendChild(tr)
+      });
+
+      tbodyElem.appendChild(fragment);  
+
+    } catch (error) {
+      
+    }
+   
+  },
   init: () => {
     const tbodyElem = document.getElementById('shopping-cart-tbl').querySelector('tbody');
-
+    View.getCart(tbodyElem);   
     console.log('TODO: Please see the above requirement');
   }
 };
